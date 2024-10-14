@@ -18,10 +18,10 @@ class WC_Paytm extends WC_Payment_Gateway
         $getPaytmSetting = get_option('woocommerce_paytm_settings');
         $invertLogo = isset($getPaytmSetting['invertLogo'])?$getPaytmSetting['invertLogo']:"0";
         if ($invertLogo == 1) {
-            $this->icon= esc_url("https://staticpg.paytm.in/pg_plugins_logo/paytm_logo_invert.svg");
+            $this->icon= esc_url("https://staticpg.paytmpayments.com/pg_plugins_logo/paytm_logo_invert.svg");
         }
         else {
-            $this->icon= esc_url("https://staticpg.paytm.in/pg_plugins_logo/paytm_logo_paymodes.svg");
+            $this->icon= esc_url("https://staticpg.paytmpayments.com/pg_plugins_logo/paytm_logo_paymodes.svg");
         }
         $this->has_fields= false;
 
@@ -99,7 +99,7 @@ class WC_Paytm extends WC_Payment_Gateway
         $checkout_page_id = get_option('woocommerce_checkout_page_id');
         $checkout_page_id = (int) $checkout_page_id > 0 ? $checkout_page_id : 7;
         $webhookUrl = esc_url(get_site_url() . '/?wc-api=WC_Paytm&webhook=yes');
-        $paytmDashboardLink = esc_url("https://dashboard.paytm.com/next/apikeys");
+        $paytmDashboardLink = esc_url("https://dashboard.paytmpayments.com/next/apikeys");
         $paytmPaymentStatusLink = esc_url("https://developer.paytm.com/docs/payment-status/");
         $paytmContactLink = esc_url("https://business.paytm.com/contact-us#developer");
         $this->form_fields = array(
@@ -743,6 +743,7 @@ function setPaymentNotificationUrl()
         $mkey = sanitize_text_field($_POST['mkey']);
         if ($_POST['is_webhook']==1) {
            $webhookUrl = sanitize_text_field($_POST['webhookUrl']);
+           //$webhookUrl = sanitize_text_field("https://www.dummyUrl.com");
         } else {
             $webhookUrl = esc_url("https://www.dummyUrl.com"); //set this when unchecked
         }
@@ -754,7 +755,6 @@ function setPaymentNotificationUrl()
           );
         $checksum = PaytmChecksum::generateSignature(json_encode($paytmParams, JSON_UNESCAPED_SLASHES), $mkey); 
         $res= PaytmHelper::executecUrl($url.'api/v1/external/putMerchantInfo', $paytmParams, $method ='PUT',['x-checksum'=>$checksum]);
-   // print_r($res);
         if (isset($res['success'])) {
         $message = true;
         $success = $response;
